@@ -13,6 +13,7 @@ module.exports = params => {
     binPath = options.binPath || binPath;
 
     return through.obj(function (file, enc, cb) {
+        const mainProcess = this
         const absolutePath = path.resolve(file.path);
         const isAbsolutePath = absolutePath.indexOf(file.path) >= 0;
         let childArgs = [];
@@ -103,7 +104,8 @@ module.exports = params => {
                     log(`gulp-qunit: ${chalk.green('✔ ')}QUnit assertions all passed in ${chalk.blue(file.relative)}`);
                 }
 
-                this.emit('gulp-qunit.finished', { 'passed': passed });
+                mainProcess.emit('gulp-qunit.finished', { 'passed': passed });
+                cb();
             });
         } catch (e) {
             this.emit('error', new PluginError('gulp-qunit', e));
@@ -111,6 +113,6 @@ module.exports = params => {
 
         this.push(file);
 
-        cb();
+        // cb();
     });
 };
