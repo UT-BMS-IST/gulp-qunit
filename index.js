@@ -104,7 +104,9 @@ module.exports = params => {
                     log(`gulp-qunit: ${chalk.green('✔ ')}QUnit assertions all passed in ${chalk.blue(file.relative)}`);
                 }
 
-                mainProcess.emit('gulp-qunit.finished', { 'passed': passed });
+                const relativeFilePath = file.path.substring(file.cwd.length + 1)
+                mainProcess.emit('gulp-qunit.finished',
+                    { 'passed': passed, 'absolutePath': file.path, 'relativePath': relativeFilePath });
                 cb();
             });
         } catch (e) {
